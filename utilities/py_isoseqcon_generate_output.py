@@ -148,7 +148,7 @@ def generate_output(input_gpd_list,output_gpd,sgt_k_fl,sgt_n_fl,sgt_k_lr,sgt_n_l
 							novel_sgt_loci_idx += 1
 							gene_id = "novel_sgt_loci_" + str(novel_sgt_loci_idx) # re-index novel singleton isoform loci
 							derived_genic_loci = "-"
-						print >>output_gpd, "\t".join([gene_id,iso_id,chr,strand,tss,tts,str(fl_c),read_number,exon_number,exon_start,exon_end,derived_genic_loci,derived_genic_loci_over_pct,last_exon_iso_over,last_exon_max_pct,"NA","NA",str(nuc_A_frq_max),str(nuc_A_pct)])
+						print >>output_gpd, "\t".join([gene_id,iso_id,chr,strand,tss,tts,str(fl_c),read_number,exon_number,exon_start,exon_end,derived_genic_loci,derived_genic_loci_over_pct,last_exon_iso_over,str(last_exon_max_pct),"NA","NA",str(nuc_A_frq_max),str(nuc_A_pct)])
 				else: # known
 					if int(read_number) >= sgt_k_lr and fl_c >= sgt_k_fl:
 						print >>output_gpd, "\t".join([gene_id,iso_id,chr,strand,tss,tts,str(fl_c),read_number,exon_number,exon_start,exon_end,"NA","NA","NA","NA","NA","NA","NA","NA"])
