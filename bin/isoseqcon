@@ -8,7 +8,6 @@ def main():
 	tempdir = setup_tempdir(args.tempdir)
 	udir = os.path.dirname(os.path.realpath(__file__)) + "/../utilities"
 	sys.stdout.write("<<Welcome to use IsoSeqCon>>\n\n###Start IsoSeqCon running at: " + time.strftime("%a,%d %b %Y %H:%M:%S") + "\n\n")
-	sys.stdout.flush()
 	
 	sys.stdout.write("## Step1: convert GTF to GPD, then sort at: " + time.strftime("%a,%d %b %Y %H:%M:%S") + "\n")
 	sys.stdout.write("# Convert GTF to GPD\n")
@@ -16,12 +15,15 @@ def main():
 	cmd1 = udir + "/py_isoseqcon_gtf2gpd.py -p yes -i " + args.annotation + " -o " + tempdir + "/isoform_annotation.gpd"
 	call(cmd1.split())
 	sys.stdout.write("# Sort GPD\n")
+	sys.stdout.flush()
 	cmd1s = "sort -k3,3 -k5,5n -k6,6n " + tempdir + "/isoform_annotation.gpd >" + tempdir + "/isoform_annotation.sort.gpd"
 	os.system(cmd1s)
 	sys.stdout.write("# Extract last exon information (TXT)\n")
+	sys.stdout.flush()
 	cmd1_le = udir + "/py_isoseqcon_extract_last_exon.py -i " + tempdir + "/isoform_annotation.gpd" + " -o " + tempdir + "/isoform_annotation_last_exon.txt"
 	call(cmd1_le.split())
 	sys.stdout.write("# Sort TXT\n")
+	sys.stdout.flush()
 	cmd1_les = "sort -k3,3 -k4,4 -k5,5n -k6,6n " + tempdir + "/isoform_annotation_last_exon.txt >" + tempdir + "/isoform_annotation_last_exon.sort.txt"
 	os.system(cmd1_les)
 	sys.stdout.write("\n## Step2: convert SAM to GPD (PacBio Iso-Seq long read) at: " + time.strftime("%a,%d %b %Y %H:%M:%S") + "\n")
@@ -49,9 +51,11 @@ def main():
 	sys.stdout.write("\n## Step5: concatenate annotated isoforms and corrected long reads at: " + time.strftime("%a,%d %b %Y %H:%M:%S") + "\n")
 	sys.stdout.flush()
 	sys.stdout.write("# Singleton isoform\n")
+	sys.stdout.flush()
 	cmd5sgt = udir + "/py_isoseqcon_concat_sgt.py -p " + args.sgt_pct + " -i " + tempdir + "/isoform_annotation_plus_long_read.sort.gpd" + " -o " + tempdir + "/singleton_isoform.concat.gpd"
 	call(cmd5sgt.split())
 	sys.stdout.write("# Multi-exon isoform\n")
+	sys.stdout.flush()
 	cmd5mlt = udir + "/py_isoseqcon_concat_mlt.py" + " -i " + tempdir + "/isoform_annotation_plus_long_read.sort.gpd" + " -o " + tempdir + "/multiexon_isoform.concat.gpd"
 	call(cmd5mlt.split())
 	sys.stdout.write("\n## Step6: construct singleton isoform at: " + time.strftime("%a,%d %b %Y %H:%M:%S") + "\n")
@@ -71,6 +75,7 @@ def main():
 	cmd8 = udir + "/py_isoseqcon_generate_output.py -i " + tempdir + "/singleton_isoform.concat.constr.gpd " + tempdir + "/multiexon_isoform.concat.constr.gpd" + " -o " + args.output_gpd + " --sgt_k_fl " + args.sgt_k_fl + " --sgt_n_fl " + args.sgt_n_fl + " --sgt_k_lr " + args.sgt_k_lr + " --sgt_n_lr " + args.sgt_n_lr + " --mlt_k_fl " + args.mlt_k_fl + " --mlt_n_fl " + args.mlt_n_fl + " --mlt_k_lr " + args.mlt_k_lr + " --mlt_n_lr " + args.mlt_n_lr + " --mlt_n_ss " + args.mlt_n_ss + " --mlt_n_sub " + args.mlt_n_sub + " -g " + args.genome + " --up_len " + args.up_len + " --down_len " + args.down_len + " --max_a_pct " + args.max_a_pct + " --max_a_len " + args.max_a_len + " --last_exon " + tempdir + "/isoform_annotation_last_exon.sort.txt" + " --max_over_pct " + args.sgt_n_le
 	call(cmd8.split())
 	sys.stdout.write("# Generate GTF\n")
+	sys.stdout.flush()
 	cmd8gtf = udir + "/py_isoseqcon_gpd2gtf.py -i " + args.output_gpd + " -o " + args.output_gtf
 	call(cmd8gtf.split())
 	sys.stdout.write("\n### Finish IsoSeqCon running at: " + time.strftime("%a,%d %b %Y %H:%M:%S") + "\n")
