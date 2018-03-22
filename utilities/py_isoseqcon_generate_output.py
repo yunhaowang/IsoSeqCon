@@ -18,7 +18,7 @@ def parse_genome(genome_fa):
 		if line.startswith(">"):
 			dic_chr_seq[chr] = "".join(seq_list)
 			seq_list = []
-			chr = line.strip().split(" ")[0][1:]
+			chr = line.strip().split()[0][1:]
 		else:
 			seq_list.append(line.strip())
 	dic_chr_seq[chr] = "".join(seq_list) # add last chromosome
